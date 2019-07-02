@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ge.boot.mapper.TMapper">
+  <resultMap id="BaseResultMap" type="com.ge.boot.entity.T">
+    <id column="a_id" jdbcType="INTEGER" property="id" />
+    <result column="a_name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <resultMap id="ExtendsResultMap" type="com.ge.boot.entity.T" extends="BaseResultMap">
+    <id column="b_id" jdbcType="INTEGER" property="t2.id" />
+    <result column="b_age" jdbcType="VARCHAR" property="t2.age" />
+    <result column="b_name" jdbcType="VARCHAR" property="t2.name" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    a.id AS a_id, a.name AS a_name
+  </sql>
+
+  <sql id="T2_List">
+    b.id AS b_id, b.age AS b_age, b.name AS b_name
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t AS a
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="listJoin" resultMap="ExtendsResultMap">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="T2_List" />
+    from t AS a LEFT JOIN t2 AS b ON a.id = b.id
+    where a.id = #{id}
+  </select>
+
+  <resultMap id="ExtendsResultMap2" type="com.ge.boot.entity.T" extends="BaseResultMap">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="id" jdbcType="INTEGER" property="t2.id" />
+    <result column="age" jdbcType="VARCHAR" property="t2.age" />
+    <result column="name" jdbcType="VARCHAR" property="t2.name" />
+  </resultMap>
+
+  <select id="listJoin2" resultMap="ExtendsResultMap2">
+    select
+    a.id , a.name , b.id , b.age , b.name
+    from t a LEFT JOIN t2 b ON a.id = b.id
+    where a.id = #{id}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.ge.boot.entity.T">
+    insert into t
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id},
+      </if>
+      <if test="name != null">
+        #{name},
+      </if>
+    </trim>
+  </insert>
+
+
+
+
+</mapper>
