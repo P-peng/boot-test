@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ge.boot.mapper.TestT2Mapper">
+  <resultMap id="BaseResultMap" type="com.ge.boot.entity.T2">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="age" jdbcType="VARCHAR" property="age" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, age, name
+  </sql>
+
+  <insert id="insertSelective" parameterType="com.ge.boot.entity.T2" useGeneratedKeys="true" keyProperty="id">
+    insert into t2
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="list" parameterType="map" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM t2 AS a
+    <if test="params != null">
+      <where>
+        <if test="params.name != null">
+          a.name = #{params.name}
+        </if>
+      </where>
+    </if>
+  </select>
+
+</mapper>
